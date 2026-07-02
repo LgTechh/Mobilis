@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="theme-color" content="#0d0f14"/>
+  <title>Mobilis</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════
+     ÉCRAN 0 — HUB
+════════════════════════════════════════════════ -->
+<div id="screen-hub" class="screen screen-tab">
+  <div class="scroll-body tab-scroll-body dash-scroll">
+    <p class="dash-brand"></p>
+    <h1 class="dash-title">Tableau de bord</h1>
+
+    <div class="dash-user-row">
+      <div class="dash-avatar" id="dash-avatar">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+      </div>
+      <div class="dash-user-text">
+        <p class="dash-user-name" id="dash-user-name">—</p>
+        <p class="dash-user-sub" id="dash-user-sub">—</p>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="dash-grid-left">
+        <div class="dash-card dash-card-time">
+          <p class="dash-card-label">Temps de mobilité</p>
+          <p class="dash-card-sub">Total</p>
+          <p class="dash-time-value" id="dash-total-time">0h00</p>
+          <p class="dash-sessions-count" id="dash-sessions-count">0 séance</p>
+        </div>
+
+        <div class="dash-card dash-card-focus">
+          <p class="dash-card-label">Focus de mobilité</p>
+          <div class="dash-focus-list" id="dash-focus-list"></div>
+        </div>
+      </div>
+
+      <button class="dash-card dash-card-score" id="dash-score-card" onclick="showScreen('screen-profile')">
+        <p class="dash-card-label">Score de mobilité</p>
+        <div class="dash-ring-wrap">
+          <svg viewBox="0 0 60 60" class="dash-ring">
+            <circle class="dr-track" cx="30" cy="30" r="26"/>
+            <circle class="dr-arc" cx="30" cy="30" r="26" id="dash-ring-arc"/>
+          </svg>
+          <span class="dr-text" id="dash-score-value">—</span>
+        </div>
+        <div class="dash-bars" id="dash-bars"></div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     ÉCRAN 0.2 — ACTIVITÉS (onglet principal)
+════════════════════════════════════════════════ -->
+<div id="screen-activites" class="screen screen-tab active">
+  <div class="tab-topbar">
+    <div class ="topbar-inner">
+      <p class="dash-brand">MOBILIS</p>
+    <span class="tab-topbar-title" id="activites-greeting">Bonjour</span>
+    </div>
+  </div>
+
+  <div class="act-carousel" id="act-carousel">
+    <button class="act-card" data-card="daily" onclick="goToDaily()">
+      <div class="act-card-media act-card-media--daily"></div>
+      <div class="act-card-fade"></div>
+      <div class="act-card-text">
+        <p class="act-card-title">Quotidien</p>
+        <p class="act-card-sub">À la maison</p>
+      </div>
+    </button>
+
+    <button class="act-card" data-card="libre" onclick="showScreen('screen-selection')">
+      <div class="act-card-media act-card-media--libre"></div>
+      <div class="act-card-fade"></div>
+      <div class="act-card-text">
+        <p class="act-card-title">Routine Libre</p>
+        <p class="act-card-sub">Choisissez vos zones</p>
+      </div>
+    </button>
+
+    <div class="act-card act-card--locked" data-card="test">
+      <div class="act-card-media act-card-media--test"></div>
+      <div class="act-card-fade"></div>
+      <span class="act-card-badge">🔒 Bientôt</span>
+      <div class="act-card-text">
+        <p class="act-card-title">Test de Mobilité</p>
+        <p class="act-card-sub">Évaluez vos 6 zones</p>
+      </div>
+    </div>
+
+    <div class="act-card act-card--locked" data-card="sport">
+      <div class="act-card-media act-card-media--sport"></div>
+      <div class="act-card-fade"></div>
+      <span class="act-card-badge">🔒 Bientôt</span>
+      <div class="act-card-text">
+        <p class="act-card-title">Routine par Sport</p>
+        <p class="act-card-sub">Ciblée sur votre pratique</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="act-dots" id="act-dots"></div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     ÉCRAN 0.3 — PROFIL (onglet principal)
+════════════════════════════════════════════════ -->
+<div id="screen-tab-profil" class="screen screen-tab">
+  <div class="tab-topbar">
+    <span class="tab-topbar-title">Profil</span>
+  </div>
+  <div class="scroll-body tab-scroll-body">
+    <div style="height:8px"></div>
+
+    <div class="profil-identity-card">
+      <div class="dash-avatar dash-avatar--lg">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+      </div>
+      <div class="profil-identity-fields">
+        <label class="profil-field-label" for="profil-name-input">Nom</label>
+        <input type="text" id="profil-name-input" class="profil-name-input" placeholder="Votre nom" maxlength="40">
+        <p class="profil-member-since" id="profil-member-since">—</p>
+      </div>
+    </div>
+
+    <button class="hub-tile-secondary" onclick="showScreen('screen-profile')">
+      <span class="hub-ts-icon">📊</span>
+      <span class="hub-ts-text">
+        <span class="hub-ts-title">Mon Profil Mobilité</span>
+        <span class="hub-ts-sub">Ajustez vos scores par zone</span>
+      </span>
+      <span class="hub-ts-arrow">›</span>
+    </button>
+
+    <div class="hub-tiles-locked">
+      <div class="hub-tile-locked">
+        <div class="hub-tl-icon">⚙️</div>
+        <div class="hub-tl-title">Réglages</div>
+        <span class="hub-tl-badge">🔒 Bientôt</span>
+      </div>
+      <div class="hub-tile-locked">
+        <div class="hub-tl-icon">🏆</div>
+        <div class="hub-tl-title">Historique</div>
+        <span class="hub-tl-badge">🔒 Bientôt</span>
+      </div>
+    </div>
+
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     ÉCRAN 0.5 — PROFIL DE MOBILITÉ
+════════════════════════════════════════════════ -->
+<div id="screen-profile" class="screen">
+  <div class="sel-topbar">
+    <button class="btn-back" onclick="showScreen('screen-hub')">← Hub</button>
+    <span class="sel-topbar-title">Mon Profil Mobilité</span>
+  </div>
+  <div class="scroll-body">
+    <div style="height:16px"></div>
+    <p class="profile-intro">
+      Évaluez votre mobilité actuelle sur chaque zone (0% = très raide, 100% = excellente mobilité).
+      Ces scores déterminent automatiquement vos <strong>points faibles</strong> et orientent votre routine quotidienne.
+    </p>
+
+    <div class="profile-sliders" id="profile-sliders">
+      <!-- Généré dynamiquement par JS : 6 sliders -->
+    </div>
+
+    <div class="profile-weakpoints" id="profile-weakpoints">
+      <p class="pw-label">Points faibles détectés</p>
+      <div class="pw-tags" id="pw-tags"></div>
+    </div>
+
+    <div style="height:16px"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     ÉCRAN 0.8 — GOWOD QUOTIDIEN (DAILY)
+════════════════════════════════════════════════ -->
+<div id="screen-daily" class="screen">
+  <div class="sel-topbar">
+    <button class="btn-back" onclick="showScreen('screen-activites')">← Hub</button>
+    <span class="sel-topbar-title">MoBilis Quotidien</span>
+  </div>
+  <div class="scroll-body">
+    <div style="height:16px"></div>
+
+    <div class="daily-card">
+      <p class="daily-card-label">Routine personnalisée</p>
+      <p class="daily-card-text">
+        Basé sur vos points faibles actuels :
+        <strong id="daily-pf1">—</strong> et <strong id="daily-pf2">—</strong>
+      </p>
+    </div>
+
+    <div class="sel-section">
+      <div class="cat-header">
+        <span class="cat-badge" style="background:rgba(232,255,71,.1);color:var(--accent);border:1px solid rgba(232,255,71,.25)">⏱ Durée</span>
+      </div>
+      <div class="duration-grid">
+        <button class="duration-btn" data-minutes="8"><span class="dur-min">8</span><span class="dur-label">min</span></button>
+        <button class="duration-btn" data-minutes="15"><span class="dur-min">15</span><span class="dur-label">min</span></button>
+        <button class="duration-btn" data-minutes="22"><span class="dur-min">22</span><span class="dur-label">min</span></button>
+      </div>
+    </div>
+
+    <p class="sel-alert" id="daily-alert"></p>
+    <div style="height:8px"></div>
+  </div>
+  <div class="sel-footer">
+    <button class="btn-start" id="btn-start-daily" onclick="startDailyRoutine()">Démarrer →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     ÉCRAN 1 — SÉLECTION (Routine Libre)
+════════════════════════════════════════════════ -->
+<div id="screen-selection" class="screen">
+  <div class="sel-topbar">
+    <button class="btn-back" onclick="showScreen('screen-hub')">← Hub</button>
+    <span class="sel-topbar-title">Routine Libre</span>
+  </div>
+  <div class="scroll-body">
+    <div style="height:16px"></div>
+    <div class="sel-section">
+      <div class="cat-header"><span class="cat-badge chains">⛓️ Grandes Chaînes &amp; Groupes</span></div>
+      <p class="cat-desc">Travaillez plusieurs groupes en une sélection.</p>
+      <div class="zones-grid" id="grid-chains"></div>
+    </div>
+    <div class="sel-section">
+      <div class="cat-header"><span class="cat-badge muscles"> Muscles Isolés</span></div>
+      <p class="cat-desc">Ciblez une zone précise pour une récupération localisée.</p>
+      <div class="zones-grid" id="grid-muscles"></div>
+    </div>
+    <div class="sel-section">
+      <div class="cat-header"><span class="cat-badge" style="background:rgba(232,255,71,.1);color:var(--accent);border:1px solid rgba(232,255,71,.25)">⏱ Durée</span></div>
+      <div class="duration-grid">
+        <button class="duration-btn" data-minutes="8"><span class="dur-min">8</span><span class="dur-label">min</span></button>
+        <button class="duration-btn" data-minutes="15"><span class="dur-min">15</span><span class="dur-label">min</span></button>
+        <button class="duration-btn" data-minutes="22"><span class="dur-min">22</span><span class="dur-label">min</span></button>
+      </div>
+    </div>
+    <p class="sel-count" id="sel-count"></p>
+    <p class="sel-alert" id="sel-alert"></p>
+    <div style="height:8px"></div>
+  </div>
+  <div class="sel-footer">
+    <button class="btn-start" id="btn-start" onclick="startRoutine()">Lancer la routine →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     ÉCRAN 2 — ROUTINE
+════════════════════════════════════════════════ -->
+<div id="screen-routine" class="screen">
+
+  <!-- 1. TIMELINE — remplace la progress-bar, générée par JS -->
+  <div class="session-timeline" id="session-timeline">
+    <button class="btn-quit" onclick="quitRoutine()">✕</button>
+    <div class="timeline-dots" id="timeline-dots"></div>
+  </div>
+
+  <!-- Bannière changement de côté -->
+  <div class="side-switch-banner" id="side-switch-banner">
+    <span class="ssb-text">Changez de côté</span>
+    <span class="ssb-count" id="ssb-count">5s</span>
+  </div>
+
+  <!-- 2. META EXERCICE — hiérarchie typographique repensée -->
+  <div class="rout-meta">
+    <div class="rout-meta-top">
+      <span class="exo-zone-tag" id="exo-zone">Hanches</span>
+      <span class="side-label hidden" id="side-label">GAUCHE</span>
+    </div>
+    <h2 class="exo-name" id="exo-name">Pigeon au sol</h2>
+    <div class="rout-meta-bottom">
+      <span class="exo-subtitle" id="exo-subtitle">2:00 par côté</span>
+      <span class="next-inline">
+        <span class="next-inline-lbl">Suiv.</span>
+        <span class="next-inline-name" id="next-name">—</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- 3. CHRONO — police monospace, taille imposante -->
+  <div class="chrono-row">
+    <div class="chrono-ring" id="chrono-ring">
+      <svg viewBox="0 0 60 60">
+        <circle class="c-track" cx="30" cy="30" r="26"/>
+        <circle class="c-arc"   cx="30" cy="30" r="26" id="chrono-arc"/>
+      </svg>
+      <span class="c-text" id="chrono-text">—</span>
+    </div>
+  </div>
+
+  <!-- VIDÉO — pleine largeur, aspect-ratio 16/9, aucune bande noire -->
+  <div class="media-zone" id="media-zone">
+    <div class="media-placeholder" id="media-ph">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" opacity="0.25"><polygon points="5,3 19,12 5,21"/></svg>
+    </div>
+    <div class="vid-overlay paused" id="vid-overlay" onclick="toggleVideoPlayback()">
+      <span class="vid-center-icon">
+        <svg width="52" height="52" viewBox="0 0 24 24" fill="white" opacity="0.9"><polygon points="5,3 19,12 5,21"/></svg>
+      </span>
+      <div class="vid-btn" id="vid-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><polygon points="5,3 19,12 5,21"/></svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO SCROLL — stimulus + instructions -->
+  <div class="info-scroll">
+    <div class="info-card">
+      <div class="info-row">
+        <p class="info-row-label stim">Stimulus</p>
+        <p class="info-row-text" id="stimulus-text">…</p>
+      </div>
+      <div class="info-row">
+        <p class="info-row-label inst">Instructions</p>
+        <ul class="instr-list" id="instr-list"></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOUTONS — toujours en bas, à portée des doigts -->
+  <div class="sheet-controls">
+    <div class="controls-row" id="controls-row"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     ÉCRAN 3 — FIN
+════════════════════════════════════════════════ -->
+<div id="screen-done" class="screen">
+  <span class="done-icon">🥵</span>
+  <h2 class="done-title">Session terminée !</h2>
+  <p class="done-sub">Deviens chaque jour, une meilleure version de toi-même.</p>
+  <div class="done-stats">
+    <div class="done-stat"><span class="done-num" id="done-exos">0</span><span class="done-lbl">Exercices</span></div>
+    <div class="done-stat"><span class="done-num" id="done-time">0</span><span class="done-lbl">Minutes</span></div>
+  </div>
+  <button class="btn-done-back" onclick="showScreen('screen-hub')">← Retour au Hub</button>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     BOTTOM NAVIGATION — persistante sur les 3 onglets
+════════════════════════════════════════════════ -->
+<nav class="bottom-nav" id="bottom-nav">
+  <button class="bn-item" data-screen="screen-hub" onclick="switchTab('screen-hub')">
+    <svg class="bn-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+  </button>
+  <button class="bn-item" data-screen="screen-activites" onclick="switchTab('screen-activites')">
+    <svg class="bn-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13,2 3,14 11,14 9,22 21,10 13,10"/></svg>
+  </button>
+  <button class="bn-item" data-screen="screen-tab-profil" onclick="switchTab('screen-tab-profil')">
+    <svg class="bn-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg>
+  </button>
+</nav>
+
+<script src="app.js"></script>
+</body>
+</html>

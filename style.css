@@ -159,7 +159,9 @@ button.dash-card { cursor: pointer; }
 .dash-focus-label { display: block; font-size: 10.5px; color: var(--dim); font-weight: 700; }
 .dash-focus-name { display: block; font-size: 13.5px; font-weight: 800; margin-top: 1px; }
 
-
+/* ══════════════════════════════════
+   ACTIVITÉS — carrousel de cartes
+══════════════════════════════════ */
 /* ══════════════════════════════════
    ACTIVITÉS — carrousel de cartes
 ══════════════════════════════════ */

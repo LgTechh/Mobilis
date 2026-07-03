@@ -37,8 +37,8 @@ html, body { height: 100vh; height: 100dvh; overflow: hidden; background: var(--
    Les autres écrans (routine, sélection, done...) gardent var(--bg) inchangé. */
 #screen-hub, #screen-activites, #screen-tab-profil, #screen-routine, #screen-selection, #screen-daily {
   background: var(--bg-gradient);
-}
-
+} 
+/* Espace réservé en bas pour ne pas passer sous la bottom nav */
 /* Espace réservé en bas pour ne pas passer sous la bottom nav */
 body.has-bottom-nav #screen-hub,
 body.has-bottom-nav #screen-activites,

@@ -14,7 +14,7 @@
   --rs:      8px;
   --font:    'Inter', system-ui, sans-serif;
   --ease:    0.22s cubic-bezier(.4,0,.2,1);
-  --sab:     8px;
+  --sab:     0px;
   --sat:     env(safe-area-inset-top, 0px);
   --bg-gradient: radial-gradient(circle at top right, #1a2a40, #0d0f14 60%);
   --nav-h:   64px;
@@ -168,7 +168,7 @@ button.dash-card { cursor: pointer; }
 .act-carousel {
   flex: 1; display: flex; overflow-x: auto; overflow-y: hidden;
   scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
-  padding: 4px 40px calc(var(--sab) + var(--nav-h) + 24px);
+  padding: 4px 40px calc(var(--sab) + var(--nav-h) + 10px);
 }
 .act-carousel::-webkit-scrollbar { display: none; }
 
@@ -201,7 +201,7 @@ button.dash-card { cursor: pointer; }
 }
 
 .act-dots {
-  position: absolute; left: 0; right: 0; bottom: calc(var(--sab) + var(--nav-h) + 60px);
+  position: absolute; left: 0; right: 0; bottom: calc(var(--sab) + var(--nav-h) + 40px);
   display: flex; justify-content: center; gap: 6px; pointer-events: none;
 }
 .act-dot {

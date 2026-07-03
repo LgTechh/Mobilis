@@ -14,7 +14,7 @@
   --rs:      8px;
   --font:    'Inter', system-ui, sans-serif;
   --ease:    0.22s cubic-bezier(.4,0,.2,1);
-  --sab:     env(safe-area-inset-bottom, 0px);
+  --sab:     8px;
   --sat:     env(safe-area-inset-top, 0px);
   --bg-gradient: radial-gradient(circle at top right, #1a2a40, #0d0f14 60%);
   --nav-h:   64px;

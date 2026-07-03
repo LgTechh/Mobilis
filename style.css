@@ -17,7 +17,7 @@
   --sab:     0px;
   --sat:     env(safe-area-inset-top, 0px);
   --bg-gradient: radial-gradient(circle at top right, #1a2a40, #0d0f14 60%);
-  --nav-h:   64px;
+  --nav-h:   54px;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { background: var(--bg); }

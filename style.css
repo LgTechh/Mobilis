@@ -145,7 +145,7 @@ button.dash-card { cursor: pointer; }
 /* Barres hautes et fines, ancrées en bas, sans fond de "track" — juste
    la partie colorée avec un cap arrondi, comme la référence GOWOD. */
 .dash-bars { display: flex; align-items: flex-end; justify-content: center; gap: 12px; height: 100px; margin-top: auto; padding-top: 14px; width: 100%; }
-.dash-bar { width: 6px; height: 100%; display: flex; align-items: flex-end; flex-shrink: 0; position: relative; border-radius: 999px; background: rgba(255,255,255,.1); overflow: hidden; }
+.dash-bar { width: 6px; height: 100%; display: flex; align-items: flex-end; flex-shrink: 0; }
 .dash-bar-fill { width: 100%; border-radius: 999px; transition: height .5s var(--ease); }
 
 .dash-card-focus { gap: 10px; flex: 1; }

@@ -20,7 +20,7 @@
   --nav-h:   64px;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; background: var(--bg-gradient); color: var(--txt); font-family: var(--font); -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100vh; height: 100dvh; overflow: hidden; background: var(--bg-gradient); color: var(--txt); font-family: var(--font); -webkit-font-smoothing: antialiased; -webkit-tap-highlight-color: transparent; }
 
 /* ── Écrans ── */
 .screen { position: fixed; inset: 0; display: flex; flex-direction: column; overflow: hidden; opacity: 0; pointer-events: none; transition: opacity .25s var(--ease); background: var(--bg); }

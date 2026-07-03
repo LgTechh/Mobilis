@@ -26,7 +26,7 @@ html, body { height: 100vh; height: 100dvh; overflow: hidden; background: var(--
 /* ── Écrans ── */
 .screen { position: fixed; inset: 0; display: flex; flex-direction: column; overflow: hidden; opacity: 0; pointer-events: none; transition: opacity .25s var(--ease); background: var(--bg); }
 .screen.active { opacity: 1; pointer-events: auto; z-index: 1; }
-.scroll-body { flex: 1; overflow-y: auto; padding: 0 16px 16px; -webkit-overflow-scrolling: touch; }
+.scroll-body { flex: 1; overflow-y: auto; padding: 0 16px 16px; -webkit-overflow-scrolling: touch; overscroll-behavior: none; }
 .scroll-body::-webkit-scrollbar { display: none; }
 
 /* ══════════════════════════════════
@@ -144,7 +144,7 @@ button.dash-card { cursor: pointer; }
 
 /* Barres hautes et fines, ancrées en bas, sans fond de "track" — juste
    la partie colorée avec un cap arrondi, comme la référence GOWOD. */
-.dash-bars { display: flex; align-items: flex-end; justify-content: center; gap: 12px; height: 100px; margin-top: auto; padding-top: 14px; width: 100%; }
+.dash-bars { display: flex; align-items: flex-end; justify-content: center; gap: 12px; height: 100px; margin-top: auto; padding-top: 14px; width: 100%; overflow: hidden; box-sizing: border-box; }
 .dash-bar { width: 6px; height: 100%; display: flex; align-items: flex-end; flex-shrink: 0; }
 .dash-bar-fill { width: 100%; border-radius: 999px; transition: height .5s var(--ease); }
 

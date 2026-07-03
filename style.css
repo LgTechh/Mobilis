@@ -51,7 +51,7 @@ body.has-bottom-nav .tab-scroll-body {
 
 .bottom-nav {
   position: fixed;
-  left: 0; right: 0; bottom: 15px;
+  left: 0; right: 0; bottom: 0;
   display: none;
   align-items: stretch;
   justify-content: space-around;
@@ -89,7 +89,7 @@ body.has-bottom-nav .tab-scroll-body {
 .tab-topbar {
   flex-shrink: 0;
   margin-top: 0;
-  padding: 30px 20px 14px;
+  padding: 70px 20px 14px;
 }
 
 .topbar-inner {

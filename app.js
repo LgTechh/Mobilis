@@ -88,6 +88,47 @@ const MUSCLES_ISOLES = [
 ];
 
 /* ═══════════════════════════════════════════════════
+   PRE-WOD — BASE DE MOUVEMENTS CLASSIQUES
+   Mouvements d'haltérophilie / CrossFit basiques, chacun
+   relié aux chaînes musculaires (mêmes tags que EXERCISES)
+   qu'il sollicite. Utilisé pour cibler l'activation avant
+   l'entraînement à partir des mouvements prévus par l'utilisateur.
+═══════════════════════════════════════════════════ */
+const MOUVEMENTS_PREWOD = [
+  { nom: "Air Squat",           zones: ["Quadriceps", "Fessiers", "Hanches", "Chevilles"] },
+  { nom: "Back Squat",          zones: ["Quadriceps", "Fessiers", "Hanches", "Lombaires"] },
+  { nom: "Front Squat",         zones: ["Quadriceps", "Hanches", "Épaules", "Chevilles"] },
+  { nom: "Overhead Squat",      zones: ["Épaules", "Pectoraux", "Hanches", "Chevilles", "Quadriceps"] },
+  { nom: "Deadlift",            zones: ["Ischio-Jambiers", "Lombaires", "Fessiers", "Dorsaux"] },
+  { nom: "Sumo Deadlift",       zones: ["Adducteurs", "Fessiers", "Ischio-Jambiers", "Lombaires"] },
+  { nom: "Clean",               zones: ["Hanches", "Quadriceps", "Trapèzes", "Épaules"] },
+  { nom: "Clean & Jerk",        zones: ["Hanches", "Quadriceps", "Épaules", "Triceps"] },
+  { nom: "Snatch",              zones: ["Épaules", "Hanches", "Chevilles", "Dorsaux"] },
+  { nom: "Push Press",          zones: ["Épaules", "Triceps", "Quadriceps"] },
+  { nom: "Push Jerk",           zones: ["Épaules", "Triceps", "Hanches", "Chevilles"] },
+  { nom: "Strict Press",        zones: ["Épaules", "Triceps", "Abdominaux"] },
+  { nom: "Bench Press",         zones: ["Pectoraux", "Épaules", "Triceps"] },
+  { nom: "Thruster",            zones: ["Quadriceps", "Épaules", "Hanches"] },
+  { nom: "Pull-Up",             zones: ["Dorsaux", "Biceps", "Trapèzes"] },
+  { nom: "Chest To Bar",        zones: ["Dorsaux", "Biceps", "Épaules"] },
+  { nom: "Muscle-Up",           zones: ["Dorsaux", "Pectoraux", "Triceps", "Épaules"] },
+  { nom: "Toes To Bar",         zones: ["Abdominaux", "Fléchisseurs de l'avant-bras", "Dorsaux"] },
+  { nom: "Kipping HSPU",        zones: ["Épaules", "Triceps", "Trapèzes"] },
+  { nom: "Wall Walk",           zones: ["Épaules", "Abdominaux", "Pectoraux"] },
+  { nom: "Handstand Walk",      zones: ["Épaules", "Fléchisseurs de l'avant-bras", "Abdominaux"] },
+  { nom: "Box Jump",            zones: ["Quadriceps", "Mollets", "Chevilles"] },
+  { nom: "Burpee",              zones: ["Épaules", "Quadriceps", "Abdominaux"] },
+  { nom: "Rowing (Machine)",    zones: ["Dorsaux", "Ischio-Jambiers", "Quadriceps"] },
+  { nom: "Double Under",        zones: ["Mollets", "Chevilles"] },
+  { nom: "Wall Ball",           zones: ["Quadriceps", "Épaules", "Hanches"] },
+  { nom: "Kettlebell Swing",    zones: ["Fessiers", "Hanches", "Ischio-Jambiers", "Épaules"] },
+  { nom: "Lunge",               zones: ["Quadriceps", "Fessiers", "Hanches"] },
+  { nom: "Good Morning",        zones: ["Ischio-Jambiers", "Lombaires", "Fessiers"] },
+  { nom: "Barbell Row",         zones: ["Dorsaux", "Trapèzes", "Biceps"] },
+  { nom: "Rope Climb",          zones: ["Dorsaux", "Fléchisseurs de l'avant-bras", "Biceps"] },
+];
+
+/* ═══════════════════════════════════════════════════
    PROFIL DE MOBILITÉ — 6 ZONES CLÉS
    Chaque zone du profil est mappée vers un ou plusieurs
    tags réels de la base EXERCISES, pour le filtrage.
@@ -607,6 +648,207 @@ function startRoutine() {
 }
 
 /* ═══════════════════════════════════════════════════
+   PRE-WOD — sélection des mouvements prévus, puis
+   activation ciblée sur les chaînes musculaires sollicitées.
+═══════════════════════════════════════════════════ */
+let selectedMouvements = [];   // liste des objets MOUVEMENTS_PREWOD choisis
+let prewodMinutes = null;
+let prewodHighlight = -1;      // index surligné dans les suggestions (clavier)
+
+function initPrewodScreen() {
+  const input = document.getElementById('prewod-search-input');
+  const box = document.getElementById('prewod-suggestions');
+
+  input.addEventListener('input', () => renderPrewodSuggestions(input.value));
+  input.addEventListener('focus', () => renderPrewodSuggestions(input.value));
+  input.addEventListener('keydown', (e) => {
+    const items = Array.from(box.querySelectorAll('.prewod-suggestion-item'));
+    if (!items.length) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); prewodHighlight = Math.min(prewodHighlight + 1, items.length - 1); updatePrewodHighlight(items); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); prewodHighlight = Math.max(prewodHighlight - 1, 0); updatePrewodHighlight(items); }
+    else if (e.key === 'Enter') { e.preventDefault(); const idx = prewodHighlight >= 0 ? prewodHighlight : 0; if (items[idx]) items[idx].click(); }
+  });
+
+  // Ferme les suggestions si on clique ailleurs sur l'écran
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.prewod-search-wrap')) box.classList.remove('open');
+  });
+
+  document.querySelectorAll('#prewod-duration-grid .duration-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#prewod-duration-grid .duration-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      prewodMinutes = parseInt(btn.dataset.minutes);
+      updatePrewodStartBtn();
+    });
+  });
+}
+
+function updatePrewodHighlight(items) {
+  items.forEach((it, i) => it.classList.toggle('hi', i === prewodHighlight));
+}
+
+function renderPrewodSuggestions(query) {
+  const box = document.getElementById('prewod-suggestions');
+  const q = query.trim().toLowerCase();
+  prewodHighlight = -1;
+
+  const already = new Set(selectedMouvements.map(m => m.nom));
+  const results = MOUVEMENTS_PREWOD
+    .filter(m => !already.has(m.nom))
+    .filter(m => !q || m.nom.toLowerCase().includes(q))
+    .slice(0, 8);
+
+  if (!results.length) {
+    box.innerHTML = `<div class="prewod-suggestion-empty">Aucun mouvement trouvé.</div>`;
+  } else {
+    box.innerHTML = results.map(m => `<div class="prewod-suggestion-item" data-nom="${m.nom}">${m.nom}</div>`).join('');
+    box.querySelectorAll('.prewod-suggestion-item').forEach(item => {
+      item.addEventListener('click', () => addPrewodMouvement(item.dataset.nom));
+    });
+  }
+  box.classList.add('open');
+}
+
+function addPrewodMouvement(nom) {
+  const mvt = MOUVEMENTS_PREWOD.find(m => m.nom === nom);
+  if (!mvt || selectedMouvements.some(m => m.nom === nom)) return;
+  selectedMouvements.push(mvt);
+  const input = document.getElementById('prewod-search-input');
+  input.value = '';
+  document.getElementById('prewod-suggestions').classList.remove('open');
+  input.focus();
+  renderPrewodChips();
+  updatePrewodStartBtn();
+}
+
+function removePrewodMouvement(nom) {
+  selectedMouvements = selectedMouvements.filter(m => m.nom !== nom);
+  renderPrewodChips();
+  updatePrewodStartBtn();
+}
+
+function renderPrewodChips() {
+  const wrap = document.getElementById('prewod-chips');
+  wrap.innerHTML = selectedMouvements.map(m => `
+    <span class="prewod-chip">${m.nom}<button class="prewod-chip-remove" onclick="removePrewodMouvement('${m.nom.replace(/'/g, "\\'")}')">✕</button></span>
+  `).join('');
+}
+
+/* Zones musculaires sollicitées par les mouvements sélectionnés,
+   agrégées et dédupliquées pour filtrer la base EXERCISES. */
+function computePrewodZones() {
+  const zones = new Set();
+  selectedMouvements.forEach(m => m.zones.forEach(z => zones.add(z)));
+  return zones;
+}
+
+/* Poids de chaque zone = nombre de mouvements sélectionnés qui la
+   sollicitent. Une zone travaillée par 3 mouvements (ex: hanches sur
+   Squat + Deadlift + Good Morning) doit peser plus dans la routine
+   qu'une zone touchée par un seul mouvement isolé. */
+function computePrewodZoneWeights() {
+  const weights = {};
+  selectedMouvements.forEach(m => m.zones.forEach(z => { weights[z] = (weights[z] || 0) + 1; }));
+  return weights;
+}
+
+/* Score d'un étirement = somme des poids des zones qu'il couvre.
+   Un étirement qui couvre plusieurs zones "chaudes" (très sollicitées
+   par les mouvements du jour) remonte naturellement en priorité. */
+function scorePrewodExercise(ex, zoneWeights) {
+  return ex.zones.reduce((sum, z) => sum + (zoneWeights[z] || 0), 0);
+}
+
+function updatePrewodStartBtn() {
+  const alert = document.getElementById('prewod-alert'), count = document.getElementById('prewod-count'), btn = document.getElementById('btn-start-prewod');
+  if (!selectedMouvements.length) { count.innerHTML = 'Ajoutez au moins un mouvement.'; alert.textContent = ''; btn.classList.remove('ready'); return; }
+  const zones = computePrewodZones();
+  const avail = filterExercises(zones);
+  count.innerHTML = `<strong>${avail.length}</strong> étirement${avail.length>1?'s':''} ciblé${avail.length>1?'s':''} sur ${zones.size} zone${zones.size>1?'s':''}`;
+  if (!avail.length) { alert.textContent = 'Aucun étirement disponible pour ces mouvements.'; btn.classList.remove('ready'); return; }
+  if (!prewodMinutes) { alert.textContent = 'Choisissez une durée.'; btn.classList.remove('ready'); return; }
+  alert.textContent = ''; btn.classList.add('ready');
+}
+
+/* ═══════════════════════════════════════════════════
+   ALGORITHME PRE-WOD — buildPrewodRoutine
+   Contrairement à buildRoutine (tirage uniforme sur toutes les
+   zones cochées), on pondère chaque étirement par le nombre de
+   mouvements sélectionnés qui recrutent ses zones : les zones les
+   plus sollicitées par la séance à venir reviennent plus souvent
+   et donc cumulent plus de temps total.
+═══════════════════════════════════════════════════ */
+function buildPrewodRoutine(totalMinutes) {
+  const zoneWeights = computePrewodZoneWeights();
+  const zones = new Set(Object.keys(zoneWeights));
+  const pool = filterExercises(zones);
+  if (!pool.length) return [];
+
+  const totalSec = totalMinutes * 60;
+  const ratio = Math.max(0.2, Math.min(1, (totalMinutes - 8) / 14));
+
+  // "Tickets" pondérés : un étirement au score 3 apparaît 3x plus
+  // souvent dans le tirage qu'un étirement au score 1, sans pour
+  // autant exclure totalement les zones moins sollicitées.
+  const tickets = [];
+  pool.forEach(ex => {
+    const score = Math.max(1, scorePrewodExercise(ex, zoneWeights));
+    for (let i = 0; i < score; i++) tickets.push(ex);
+  });
+  const shuffled = [...tickets].sort(() => Math.random() - .5);
+
+  const routine = [];
+  let elapsed = 0, idx = 0, guard = 0;
+  while (elapsed < totalSec && guard < 500) {
+    guard++;
+    if (idx >= shuffled.length) idx = 0;
+    const ex = shuffled[idx++];
+    // Évite deux fois le même étirement d'affilée quand une alternative existe
+    if (routine.length && routine[routine.length - 1].nom === ex.nom && pool.length > 1) continue;
+
+    const base = ex.temps_min + ratio * (ex.temps_max - ex.temps_min);
+    const raw = Math.max(ex.temps_min, Math.min(ex.temps_max, base + (Math.random() * 40 - 20)));
+    const dur = roundTo15(raw);
+
+    routine.push({ ...ex, duration: dur });
+    elapsed += dur;
+    if (elapsed >= totalSec) break;
+  }
+  return routine;
+}
+
+function startPrewodRoutine() {
+  if (!selectedMouvements.length || !prewodMinutes) return;
+
+  // ─────────────────────────────────────────────────────────
+  // MODE ACTUEL : buildPrewodRoutine() pioche dans le pool
+  // d'étirements PASSIFS classiques (EXERCISES), pondéré par les
+  // zones réellement sollicitées par les mouvements choisis (voir
+  // computePrewodZoneWeights / scorePrewodExercise ci-dessus).
+  //
+  // TODO (à venir) : quand la base d'ÉTIREMENTS ACTIFS sera prête
+  // (mobilisations dynamiques, activation neuro-musculaire, plus
+  // adaptées juste avant un WOD que des étirements passifs tenus
+  // longtemps), faire piocher buildPrewodRoutine() en priorité dans
+  // ce pool actif avant de retomber sur les étirements passifs
+  // classiques, par ex. :
+  //   const poolActif  = filterExercises(zones, { type: 'actif' });
+  //   const poolPassif = filterExercises(zones, { type: 'passif' });
+  //   // scorer et tirer d'abord dans poolActif, compléter avec poolPassif
+  // ─────────────────────────────────────────────────────────
+  routine = buildPrewodRoutine(prewodMinutes);
+
+  if (!routine.length) { document.getElementById('prewod-alert').textContent = 'Impossible de créer une activation.'; return; }
+  totalRoutineSec = routine.reduce((s, ex) => s + ex.duration, 0);
+  elapsedSec = 0; currentIdx = 0; completedCount = 0;
+  sessionStart = Date.now(); isPaused = false;
+  showScreen('screen-routine');
+  loadExercise(0);
+}
+
+
+/* ═══════════════════════════════════════════════════
    ALGORITHME DU QUOTIDIEN — buildDailyRoutine
    Répartition du temps total :
      ~40% → exercices ciblant le Point Faible 1
@@ -830,6 +1072,7 @@ function playBip(mode='end') { /* ton code audio */ }
    INIT
 ═══════════════════════════════════════════════════ */
 initSelectionScreen();
+initPrewodScreen();
 initProfileScreen();
 initDailyScreen();
 initActivitesScreen();

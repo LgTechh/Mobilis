@@ -6,14 +6,15 @@
   <meta name="mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="theme-color" content="#0d0f14"/>
   <title>Mobilis</title>
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <!-- ════════════════════════════════════════════════
      ÉCRAN 0 — HUB
-════════════════════════════════════════════ -->
+════════════════════════════════════════════════ -->
 <div id="screen-hub" class="screen screen-tab">
   <div class="scroll-body tab-scroll-body dash-scroll">
     <p class="dash-brand"></p>
@@ -80,6 +81,15 @@
       </div>
     </button>
 
+    <button class="act-card" data-card="prewod" onclick="showScreen('screen-prewod')">
+      <div class="act-card-media act-card-media--prewod"></div>
+      <div class="act-card-fade"></div>
+      <div class="act-card-text">
+        <p class="act-card-title">Pre-WOD</p>
+        <p class="act-card-sub">Activez-vous avant vos mouvements</p>
+      </div>
+    </button>
+
     <button class="act-card" data-card="libre" onclick="showScreen('screen-selection')">
       <div class="act-card-media act-card-media--libre"></div>
       <div class="act-card-fade"></div>
@@ -89,24 +99,24 @@
       </div>
     </button>
 
-    <div class="act-card act-card--locked" data-card="test">
+    
+    <div class="act-card act-card--locked" data-card="post-wod">
       <div class="act-card-media act-card-media--test"></div>
       <div class="act-card-fade"></div>
       <span class="act-card-badge">🔒 Bientôt</span>
       <div class="act-card-text">
-        <p class="act-card-title">Test de Mobilité</p>
-        <p class="act-card-sub">Évaluez vos 6 zones</p>
+        <p class="act-card-title">Post-WOD</p>
+        <p class="act-card-sub">Détendez vous apèrs vos wods</p>
       </div>
     </div>
 
-    <div class="act-card act-card--locked" data-card="sport">
+    <div class="act-card act-card--locked" data-card="test">
       <div class="act-card-media act-card-media--sport"></div>
       <div class="act-card-fade"></div>
       <span class="act-card-badge">🔒 Bientôt</span>
       <div class="act-card-text">
-        <p class="act-card-title">Routine par Sport</p>
-        <p class="act-card-sub">Ciblée sur votre pratique</p>
-      </div>
+        <p class="act-card-title">Test de Mobilité</p>
+        <p class="act-card-sub">Évaluez votre mobilité globale</p>
     </div>
   </div>
 
@@ -231,13 +241,13 @@
 ════════════════════════════════════════════════ -->
 <div id="screen-selection" class="screen">
   <div class="sel-topbar">
-    <button class="btn-back" onclick="showScreen('screen-activites')">← Hub</button>
+    <button class="btn-back" onclick="showScreen('screen-hub')">← Hub</button>
     <span class="sel-topbar-title">Routine Libre</span>
   </div>
   <div class="scroll-body">
     <div style="height:16px"></div>
     <div class="sel-section">
-      <div class="cat-header"><span class="cat-badge chains"> Groupes</span></div>
+      <div class="cat-header"><span class="cat-badge chains">⛓️ Grandes Chaînes &amp; Groupes</span></div>
       <p class="cat-desc">Travaillez plusieurs groupes en une sélection.</p>
       <div class="zones-grid" id="grid-chains"></div>
     </div>
@@ -260,6 +270,49 @@
   </div>
   <div class="sel-footer">
     <button class="btn-start" id="btn-start" onclick="startRoutine()">Lancer la routine →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════
+     ÉCRAN 1.5 — PRE-WOD (activation avant l'entraînement)
+     On choisit les mouvements prévus (haltéro / CrossFit),
+     l'app les relie aux chaînes musculaires concernées et
+     propose une activation ciblée.
+════════════════════════════════════════════════ -->
+<div id="screen-prewod" class="screen">
+  <div class="sel-topbar">
+    <button class="btn-back" onclick="showScreen('screen-activites')">← Hub</button>
+    <span class="sel-topbar-title">Pre-WOD</span>
+  </div>
+  <div class="scroll-body">
+    <div style="height:16px"></div>
+    <div class="sel-section">
+      <div class="cat-header"><span class="cat-badge chains">🏋️ Vos mouvements du jour</span></div>
+      <p class="cat-desc">Ajoutez les mouvements prévus dans votre séance : on cible automatiquement les zones à activer.</p>
+
+      <div class="prewod-search-wrap">
+        <input type="text" id="prewod-search-input" class="prewod-search-input" placeholder="Rechercher un mouvement (Squat, Snatch, Bench...)">
+        <div class="prewod-suggestions" id="prewod-suggestions"></div>
+      </div>
+
+      <div class="prewod-chips" id="prewod-chips"></div>
+    </div>
+
+    <div class="sel-section">
+      <div class="cat-header"><span class="cat-badge" style="background:rgba(232,255,71,.1);color:var(--accent);border:1px solid rgba(232,255,71,.25)">⏱ Durée</span></div>
+      <div class="duration-grid" id="prewod-duration-grid">
+        <button class="duration-btn" data-minutes="3"><span class="dur-min">3</span><span class="dur-label">min</span></button>
+        <button class="duration-btn" data-minutes="10"><span class="dur-min">10</span><span class="dur-label">min</span></button>
+        <button class="duration-btn" data-minutes="15"><span class="dur-min">15</span><span class="dur-label">min</span></button>
+      </div>
+    </div>
+
+    <p class="sel-count" id="prewod-count"></p>
+    <p class="sel-alert" id="prewod-alert"></p>
+    <div style="height:8px"></div>
+  </div>
+  <div class="sel-footer">
+    <button class="btn-start" id="btn-start-prewod" onclick="startPrewodRoutine()">Activer →</button>
   </div>
 </div>
 
